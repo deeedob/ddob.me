@@ -1,0 +1,16 @@
+{# Usage: {% output(title="Program Output") %} Your output text here {% end %}
+#}
+
+<details
+  class="group rounded-xl border border-overlay bg-panel overflow-hidden shadow-sm transition-shadow hover:shadow-primary"
+>
+  <summary
+    class="cursor-pointer select-none font-mono text-content text-base px-3 py-1.5 bg-overlay/50 hover:bg-overlay transition-colors"
+  >
+    {{ title | default(value="Output") }}
+  </summary>
+
+<div class="overflow-x-auto bg-panel">
+  <pre class="!m-0 !p-2 font-mono text-content text-base leading-snug"><code>{{ body }}</code></pre>
+</div>
+</details>

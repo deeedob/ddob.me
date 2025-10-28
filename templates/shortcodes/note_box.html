@@ -1,0 +1,68 @@
+{# Usage:
+   {% note_box(type="info", title="Title") %}
+   Content **supports Markdown** inside.
+   {% end %}
+#}
+
+{% set box_type = type | default(value="info") %}
+{% set title = title | default(value="Info") %}
+
+{% if box_type == "info" %}
+  {% set color = "var(--color-state-info)" %}
+{% elif box_type == "success" %}
+  {% set color = "var(--color-state-success)" %}
+{% elif box_type == "warning" %}
+  {% set color = "var(--color-state-warning)" %}
+{% elif box_type == "error" %}
+  {% set color = "var(--color-state-error)" %}
+{% elif box_type == "tip" %}
+  {% set color = "var(--color-primary)" %}
+{% elif box_type == "note" %}
+  {% set color = "var(--color-secondary)" %}
+{% else %}
+  {% set color = "var(--color-state-info)" %}
+{% endif %}
+
+<div
+  {# Note that the  not-prose removes styling from e.g. bullets hers #}
+  class="my-6 rounded-xl border px-5 py-4 not-prose"
+  style="
+    border-color: {{ color }};
+    background-color: color-mix(in srgb, {{ color }} 10%, transparent);
+    color: var(--color-content);
+  "
+>
+  <div class="flex items-center mb-2">
+    {% if box_type == "info" %}
+      <svg class="w-5 h-5 mr-2" style="color: {{ color }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    {% elif box_type == "success" %}
+      <svg class="w-5 h-5 mr-2" style="color: {{ color }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+    {% elif box_type == "warning" %}
+      <svg class="w-5 h-5 mr-2" style="color: {{ color }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M4.93 19h14.14a2 2 0 001.74-3l-7.07-12.25a2 2 0 00-3.48 0L3.19 16a2 2 0 001.74 3z" />
+      </svg>
+    {% elif box_type == "error" %}
+      <svg class="w-5 h-5 mr-2" style="color: {{ color }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    {% elif box_type == "tip" %}
+      <svg class="w-5 h-5 mr-2" style="color: {{ color }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v4m0 10v4m8-8h-4m-8 0H4m16.24-4.24l-2.83 2.83M6.59 6.59L3.76 9.41m16.48 5.18l-2.83-2.83M6.59 17.41L3.76 14.59" />
+      </svg>
+    {% elif box_type == "note" %}
+      <svg class="w-5 h-5 mr-2" style="color: {{ color }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9M3 4h18M8 8h8m-8 4h6m-6 4h4" />
+      </svg>
+    {% endif %}
+
+    <h4 class="font-semibold text-base">{{ title }}</h4>
+  </div>
+
+  <div class="prose prose-invert max-w-none">
+    {{ body | markdown | safe }}
+  </div>
+</div>

@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% set blog = get_section(path="blog/_index.md") %}
+{% set external = get_section(path="external/_index.md") %}
+
+{% set all_sections = [blog] | concat(with=[external]) %}
+{% set posts = [] %}
+
+{# --- Get all posts from 2 levels depth into one array --- #}
+{% for section in all_sections %}
+    {% for page in section.pages %}
+        {% set_global posts = posts | concat(with=page) %}
+    {% endfor %}
+
+    {% for sub1_path in section.subsections %}
+        {% set sub1 = get_section(path=sub1_path) %}
+        {% for page in sub1.pages %}
+            {% set_global posts = posts | concat(with=page) %}
+        {% endfor %}
+
+        {% for sub2_path in sub1.subsections %}
+            {% set sub2 = get_section(path=sub2_path) %}
+            {% for page in sub2.pages %}
+                {% set_global posts = posts | concat(with=page) %}
+            {% endfor %}
+        {% endfor %}
+    {% endfor %}
+{% endfor %}
+
+{% set sorted_posts = posts | sort(attribute="date") | reverse %}
+
+{# --- Get all tags from taxonomy --- #}
+{% set tags_tax = get_taxonomy(kind="tags") %}
+{% set tags = tags_tax.items %}
+
+<section class="max-w-6xl mx-auto px-4" data-controller="tagfilter">
+  <div class="text-center mb-10">
+    <h1 class="text-4xl font-bold text-content mb-4">Latest Posts</h1>
+    <p class="text-content-muted">Filter by tag to explore topics of interest</p>
+  </div>
+
+  {# --- Tag filter buttons --- #}
+  <div class="flex flex-wrap justify-center gap-3 mb-12">
+    {% for tag in tags %}
+      <button
+        type="button"
+        data-tagfilter-target="button"
+        data-action="click->tagfilter#toggle"
+        data-tag="{{ tag.name | lower }}"
+        class="filter-btn"
+      >
+        {{ tag.name }}
+      </button>
+    {% endfor %}
+  </div>
+
+  {# --- Latest Post grid --- #}
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 transition-all duration-300"
+    data-tagfilter-target="posts"
+  >
+    {% for post in sorted_posts %}
+      {% set link = post.extra.permalink | default(value=post.permalink) %}
+      {% set_global cover = "" %}
+
+      {# Get first valid image asset if available #}
+      {% if post.assets and post.assets | length > 0 %}
+        {% for asset in post.assets %}
+          {% set a = asset | lower %}
+          {% if a is containing(".jpg") or a is containing(".jpeg") or a is containing(".png") or a is containing(".webp") or a is containing(".gif") %}
+            {% set_global cover = asset %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      {# Build tag list for filtering #}
+      {% set post_tags = post.taxonomies.tags | default(value=[]) %}
+      {% set tag_str = post_tags | join(sep=',') | lower %}
+
+      <div
+        class="bg-panel rounded-xl shadow-xl/20 hover:shadow-primary hover:shadow-xl/40
+       hover:-translate-y-1 transition-all duration-700 ease-in-out overflow-hidden flex flex-col"
+        data-tags="{{ tag_str }}"
+      >
+
+        <a href="{{ link }}" class="block flex flex-col h-full overflow-hidden">
+
+          {% if cover %}
+            {% set pos = post.extra.image_position | default(value="50%") %}
+            <img
+              src="{{ get_url(path=cover) | safe }}"
+              alt="{{ post.title }}"
+              loading="lazy"
+              class="w-full h-64 object-cover object-center flex-shrink-0"
+              style = "object-position: 50% {{ pos }};"
+            >
+          {% else %}
+            <div class="w-full h-64 bg-gradient-to-br from-primary/20 to-secondary/20 flex-shrink-0"></div>
+          {% endif %}
+
+          <div class="p-6 flex flex-col justify-between flex-grow">
+            <div>
+              <div class="flex flex-wrap items-center gap-2 mb-3">
+                <span class="text-xs text-content-muted">{{ post.date | date(format="%b %e, %Y") }}</span>
+
+                {% if post.taxonomies and post.taxonomies.tags %}
+                  {% for tag in post.taxonomies.tags %}
+                    <span class="text-[0.7rem] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full border border-primary/20 hover:bg-primary/20 transition-colors duration-200">
+                      {{ tag }}
+                    </span>
+                  {% endfor %}
+                {% endif %}
+              </div>
+
+              <h2 class="text-xl font-semibold text-content group-hover:text-primary transition-colors duration-200 mb-2">
+                {{ post.title }}
+              </h2>
+
+              {% if post.summary %}
+                <p class="text-content-muted text-sm mb-4">{{ post.summary | safe }}</p>
+              {% elif post.description %}
+                <p class="text-content-muted text-sm mb-4">{{ post.description }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </a>
+
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock content %}
+

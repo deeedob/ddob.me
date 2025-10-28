@@ -1,0 +1,19 @@
+{# Usage: {{ codemirror_load(path="src/main.cpp", language="cpp", key="main") }} #}
+
+{% if path and language and key %}
+  {% set page_parts = page.relative_path | split(pat="/") %}
+  {% set page_dir = page_parts | slice(end=-1) | join(sep="/") %}
+  {% set full_path = page_dir ~ "/" ~ path %}
+  {% set content = load_data(path=full_path, format="plain") %}
+
+  <div
+    data-controller="codemirror"
+    data-codemirror-mode-value="preload"
+    data-codemirror-key-value="{{ key }}"
+    data-codemirror-language-value="{{ language }}"
+    data-codemirror-code-value="{{ content }}">
+  </div>
+{% else %}
+  <!-- codemirror_load: missing required argument(s) -->
+{% endif %}
+

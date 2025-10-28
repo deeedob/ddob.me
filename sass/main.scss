@@ -1,0 +1,466 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+:root {
+  /* Brand */
+  --color-primary: #cba6f7;
+  --color-secondary: #f0b8af;
+  --color-accent: #fff087;
+
+  /* Surfaces */
+  --color-background: #1e1e2e; /* Page background */
+  --color-panel: #181825;      /* Cards, headers, distinct sections */
+  --color-overlay: #45475a;    /* Modals, dropdowns */
+
+  /* Content (Text) */
+  --color-content: #cad3f5;
+  --color-content-muted: #9199b4;
+  --color-content-inverted: #1e1e2e;
+
+  /* State */
+  --color-state-success: #83c99a;
+  --color-state-warning: #ffcc66;
+  --color-state-error: #f28f8f;
+  --color-state-info: #80aaff;
+}
+
+/* Light Theme */
+.light {
+  /* Brand */
+  --color-primary: #8839ef;
+  --color-secondary: #ea76cb;
+  --color-accent: #179299;
+
+  /* Surfaces */
+  --color-background: #eff1f5;
+  --color-panel: #e6e9ef;
+  --color-overlay: #ccd0da;
+
+  /* Content (Text) */
+  --color-content: #4c4f69;
+  --color-content-muted: #6c6f85;
+  --color-content-inverted: #eff1f5;
+
+  /* State */
+  --color-state-success: #40a02b;
+  --color-state-warning: #df8e1d;
+  --color-state-error: #d20f39;
+  --color-state-info: #04a5e5;
+}
+
+@theme {
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+
+  --color-background: var(--color-background);
+  --color-panel: var(--color-panel);
+  --color-overlay: var(--color-overlay);
+
+  --color-content: var(--color-content);
+  --color-content-muted: var(--color-content-muted);
+  --color-content-inverted: var(--color-content-inverted);
+
+  --color-state-success: var(--color-state-success);
+  --color-state-warning: var(--color-state-warning);
+  --color-state-error: var(--color-state-error);
+  --color-state-info: var(--color-state-info);
+}
+
+.prose {
+  --tw-prose-body: var(--color-content);
+  --tw-prose-headings: var(--color-content);
+  --tw-prose-lead: var(--color-content-muted);
+  --tw-prose-links: var(--color-secondary);
+  --tw-prose-bold: var(--color-content);
+  --tw-prose-counters: var(--color-content-muted);
+  --tw-prose-bullets: var(--color-overlay);
+  --tw-prose-hr: var(--color-overlay);
+  --tw-prose-quotes: var(--color-content);
+  --tw-prose-quote-borders: var(--color-overlay);
+  --tw-prose-captions: var(--color-content-muted);
+  --tw-prose-code: var(--color-primary);
+  --tw-prose-pre-code: var(--color-content-inverted);
+  --tw-prose-pre-bg: var(--color-panel);
+  --tw-prose-th-borders: var(--color-overlay);
+  --tw-prose-td-borders: var(--color-overlay);
+}
+
+.cm-editor {
+  /* Base Colors */
+  --cm-base-bg: var(--color-panel);
+  --cm-base-fg: var(--color-content);
+  --cm-base-muted: var(--color-content-muted);
+
+  /* Keyword Variations */
+  --cm-keyword: color-mix(in srgb, var(--color-secondary) 90%, black 10%);
+  --cm-keyword-light: color-mix(in srgb, var(--color-secondary) 70%, white 30%);
+  --cm-keyword-const: color-mix(in srgb, var(--color-secondary) 80%, var(--color-state-info) 20%);
+
+  /* Type Variations */
+  --cm-type: color-mix(in srgb, var(--color-primary) 85%, black 15%);
+  --cm-type-light: color-mix(in srgb, var(--color-primary) 70%, white 30%);
+
+  /* Function Variations */
+  --cm-function: color-mix(in srgb, var(--color-accent) 80%, black 20%);
+  --cm-function-light: color-mix(in srgb, var(--color-accent) 80%, white 20%);
+
+  /* Variable Variations */
+  --cm-variable: var(--color-content);
+  --cm-variable-light: color-mix(in srgb, var(--color-content) 80%, white 20%);
+  --cm-variable-dark: color-mix(in srgb, var(--color-content) 80%, black 20%);
+  --cm-variable-const: color-mix(in srgb, var(--color-content) 90%, var(--color-state-info) 10%);
+
+  /* Property Variations */
+  --cm-property: color-mix(in srgb, var(--color-primary) 75%, white 25%);
+  --cm-property-dark: color-mix(in srgb, var(--color-primary) 85%, black 15%);
+
+  /* String Variations */
+  --cm-string: color-mix(in srgb, var(--color-state-success) 90%, black 10%);
+  --cm-string-light: color-mix(in srgb, var(--color-state-success) 70%, white 30%);
+
+  /* Number Variations */
+  --cm-number: color-mix(in srgb, var(--color-state-warning) 85%, black 15%);
+  --cm-number-light: color-mix(in srgb, var(--color-state-warning) 65%, white 35%);
+
+  /* Comment Variations */
+  --cm-comment: color-mix(in srgb, var(--color-content-muted) 80%, black 20%);
+  --cm-comment-light: color-mix(in srgb, var(--color-content-muted) 60%, white 40%);
+
+  /* Macro Variations */
+  --cm-macro: color-mix(in srgb, var(--color-state-error) 80%, black 20%);
+  --cm-macro-light: color-mix(in srgb, var(--color-state-error) 60%, white 40%);
+
+  /* Operator Variations */
+  --cm-operator: color-mix(in srgb, var(--color-secondary) 70%, black 30%);
+  --cm-operator-light: color-mix(in srgb, var(--color-secondary) 50%, white 50%);
+
+  /* Punctuation */
+  --cm-punctuation: color-mix(in srgb, var(--color-content-muted) 60%, black 40%);
+
+  /* UI Colors */
+  --cm-selection: var(--color-overlay);
+  --cm-gutter-bg: var(--color-panel);
+  --cm-gutter-fg: color-mix(in srgb, var(--color-content-muted) 70%, black 30%);
+  --cm-active-line: var(--color-overlay)11;
+  --cm-cursor: var(--color-accent);
+  --cm-matching-bracket: var(--color-accent)44;
+}
+
+/* STYLES FOR THE MORPHING PLAY/PAUSE BUTTON */
+.path-play, .path-pause {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.path-play {
+  opacity: 1;
+  transform: scale(1);
+  transform-origin: center;
+}
+
+.path-pause {
+  opacity: 0;
+  transform: scale(0.6);
+  transform-origin: center;
+}
+
+.is-playing .path-play {
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.is-playing .path-pause {
+  opacity: 1;
+  transform: scale(1);
+}
+
+nav a.nav-link {
+  position: relative;
+  padding-bottom: 0.25rem; /* space for the underline */
+  display: inline-block;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 200ms;
+}
+
+/* the underline pseudo-element */
+nav a.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;                 /* underline thickness */
+  width: 100%;
+  background: currentColor;    /* follows the link color */
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 280ms cubic-bezier(.22,.9,.37,1);
+  will-change: transform;
+}
+
+nav a.nav-link:hover::after,
+nav a.nav-link.active::after {
+  transform: scaleX(1);
+}
+
+nav a.nav-link.active {
+  font-weight: 600;
+  color: var(--tw-prose-invert, inherit);
+}
+
+/* accessibility focus */
+nav a.nav-link:focus {
+  outline: none;
+}
+nav a.nav-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Scrollbar for Webkit browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 14px;              /* wider scrollbar */
+  height: 14px;             /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-panel);  /* background of the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(69, 71, 90, 0.6); /* semi-transparent thumb */
+  border-radius: 0;                         /* no rounding */
+  border: 3px solid var(--color-panel);     /* space around thumb to show transparency */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(69, 71, 90, 0.8); /* darker on hover */
+}
+
+/* Firefox scrollbar support */
+* {
+  scrollbar-width: thin;                   /* options: auto | thin | none */
+  scrollbar-color: rgba(203, 166, 247, 0.45) transparent;
+}
+
+.prose {
+  /* Ensure code elements are properly styled */
+  code {
+    &::before,
+    &::after {
+      content: '' !important; /* Remove backticks */
+    }
+
+    // background-color: color-mix(in srgb, var(--color-primary) 15%, transparent 85%);
+    color: var(--color-primary);
+    padding: 0.125rem 0.325rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent 80%);
+  }
+
+  /* Fix for code blocks within headings and other elements */
+  h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
+    font-size: 0.9em;
+    font-weight: 600;
+  }
+
+  /* Better pre/code block styling */
+  pre {
+    background-color: var(--color-panel);
+    border: 1px solid var(--color-overlay);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    overflow-x: auto;
+
+    code {
+      background-color: transparent;
+      color: var(--color-content);
+      padding: 0;
+      border: none;
+      font-size: 0.875em;
+      font-weight: 400;
+    }
+  }
+
+  /* Links containing code */
+  a code {
+    color: inherit;
+    background-color: color-mix(in srgb, var(--color-primary) 10%, transparent 90%);
+  }
+}
+
+.filter-btn {
+  @apply px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 transform;
+  @apply text-content bg-panel border-primary/30 shadow-inner; /* base: inset, looks like pressed in */
+  @apply hover:scale-105 hover:shadow-lg hover:bg-primary/20;  /* lifted on hover */
+  @apply cursor-pointer select-none;
+}
+
+.filter-btn.active {
+  @apply bg-primary text-white shadow-md scale-100; /* elevated look when active */
+}
+
+.filter-btn:not(.active) {
+  @apply bg-panel border-primary/20 text-primary hover:bg-primary/10; /* inset look when inactive */
+}
+
+article[data-tags] {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+article[data-tags].fade-in {
+  opacity: 1;
+  transform: scale(1);
+}
+
+article[data-tags].fade-out {
+  opacity: 0;
+  transform: scale(0.95);
+  position: absolute;
+}
+
+/* ===========================
+             Timeline
+   =========================== */
+.timeline-wrapper {
+  position: relative;
+  padding-left: 0;
+}
+
+/* Vertical line centered under the gutter (gutter width = 3rem) */
+.timeline-wrapper::before {
+  content: "";
+  position: absolute;
+  left: calc(3rem / 2); /* center of 3rem gutter */
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: color-mix(in srgb, var(--color-primary) 40%, var(--color-overlay) 60%);
+  opacity: 0.4;
+  border-radius: 1px;
+  z-index: 0;
+}
+
+/* Row layout (gutter + card) */
+.timeline-list > .timeline-item {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  z-index: 1;
+}
+
+/* Gutter (dot container). Keep width 3rem to match line calc above */
+.timeline-gutter {
+  width: 3rem;                 /* 3rem == w-12 */
+  min-width: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  position: relative;
+}
+
+/* Dot */
+.timeline-dot {
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 9999px;
+  background: var(--color-panel); /* neutral by default */
+  border: 2px solid color-mix(in srgb, var(--color-primary) 60%, white 40%);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+  margin-top: 0.45rem;
+  margin-left: 0.15rem;
+  transition: background .18s ease, transform .18s ease, box-shadow .18s ease, border-color .18s;
+  z-index: 3; /* above card and connector */
+}
+
+/* Card (visual and transitions) */
+.timeline-card {
+  margin-top: -0.7rem;
+  position: relative;
+  z-index: 2; /* above connector, below dot */
+  background: var(--color-panel);
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  transition: transform .18s cubic-bezier(.22,.9,.37,1), box-shadow .18s, border-color .18s, background .18s;
+  overflow: visible;
+}
+
+.timeline-gutter::after {
+  content: "";
+  position: absolute;
+
+  /* start from gutter right edge and extend toward the card:
+     left = 100% of gutter - ~half dot width (0.425rem) */
+  left: calc(100% - 1rem);
+
+  /* vertical center of dot: dot margin-top 0.45rem + half-dot 0.425rem - micro-adjust 1px */
+  top: calc(0.45rem + 0.425rem - 1px);
+
+  width: 1.7rem;    /* short connector length */
+  height: 2px;
+  border-radius: 2px;
+  pointer-events: none;
+
+  /* Inactive connector: muted using content-muted (subtle) */
+  background: color-mix(in srgb, var(--color-primary) 40%, var(--color-overlay) 60%);
+  opacity: 0.4;
+  z-index: 1; /* below card (2) and dot (3) */
+  transition: background .18s ease, box-shadow .18s ease;
+}
+
+/* Hover: tint connector to primary (gloomy) and give inset hint */
+.timeline-item:hover .timeline-gutter::after,
+.timeline-item:focus-within .timeline-gutter::after {
+  background: var(--color-primary);
+  opacity: 1.0
+}
+
+/* Card hover: lift + moody (gloomy) tint + stronger shadow + subtle inset glow */
+.timeline-item:hover .timeline-card,
+.timeline-item:focus-within .timeline-card {
+  transform: translateX(-6px);
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.6), /* moody outer shadow */
+    inset 0 1px 18px color-mix(in srgb, var(--color-primary) 6%, transparent 94%); /* subtle inset */
+  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-panel) 90%); /* desaturated primary tint */
+  border: 1px solid color-mix(in srgb, var(--color-primary) 8%, var(--color-overlay) 92%);
+}
+
+/* Dot hover: darker/denser primary, moody glow */
+.timeline-item:hover .timeline-dot,
+.timeline-item:focus-within .timeline-dot {
+  background: color-mix(in srgb, var(--color-primary) 82%, black 18%); /* dense primary */
+  border-color: color-mix(in srgb, var(--color-primary) 86%, white 14%);
+  transform: scale(1.06);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--color-primary) 20%, black 80%);
+}
+
+/* Vertical spacing */
+.timeline-list > .timeline-item + .timeline-item {
+  margin-top: 1.5rem;
+}
+
+/* Responsive small-screen adjustments */
+@media (max-width: 575px) {
+  .timeline-gutter { width: 2.5rem; min-width: 2.5rem; }
+  .timeline-wrapper::before { left: calc(2.5rem / 2); }
+
+  .timeline-gutter::after {
+    left: calc(100% - 0.35rem); /* half small-dot */
+    top: calc(0.35rem + 0.35rem - 1px);
+    width: 0.75rem;
+  }
+
+  .timeline-dot { width: 0.7rem; height: 0.7rem; margin-top: 0.35rem; }
+  .timeline-card { padding: 0.875rem; }
+}
+
+/* Accessibility focus outline */
+.timeline-item:focus-within .timeline-card {
+  outline: 3px solid color-mix(in srgb, var(--color-primary) 28%, transparent 72%);
+  outline-offset: 6px;
+}

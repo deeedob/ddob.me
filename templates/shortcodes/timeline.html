@@ -1,0 +1,8 @@
+{# Usage: {% timeline() %} ... {% end %} #}
+
+<div class="timeline-wrapper relative my-12">
+  <!-- vertical line: positioned using CSS in main.scss -->
+  <div id="timeline" class="timeline-list space-y-8">
+    {{ body | safe }}
+  </div>
+</div>

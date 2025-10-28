@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{{ config.title }}{% endblock %}</title>
+
+    {% include "partials/head.html" %}
+
+    <link rel="stylesheet" href="{{ get_url(path='css/main.css') | safe }}" />
+    <script type="module" src="{{ get_url(path='js/bundle.js') }}"></script>
+</head>
+
+<body class="bg-background text-content antialiased transition-colors duration-300 pb-32">
+    <header class="bg-panel border-b border-overlay/50 shadow-sm">
+        <div class="container mx-auto flex h-16 items-center justify-between px-6">
+            <a href="{{ config.base_url }}" class="text-lg font-bold text-primary transition-colors
+              hover:text-secondary">
+                {{ config.title }}
+            </a>
+            <nav class="flex items-center space-x-6 text-sm font-medium text-content-muted">
+              <a href="{{ get_url(path='@/blog/_index.md') | safe }}" class="nav-link transition-colors hover:text-primary">
+                  Blog
+              </a>
+              <a href="{{ get_url(path='@/about.md') | safe }}" class="nav-link transition-colors hover:text-primary">
+                  About
+              </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-6 lg:p-8">
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+</body>
+</html>

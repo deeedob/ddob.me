@@ -1,0 +1,17 @@
+{# Usage: {{ codemirror(key="main", section="task") }} #}
+
+{% if key %}
+  <div
+    data-controller="codemirror"
+    data-codemirror-mode-value="editor"
+    data-codemirror-key-value="{{ key }}"
+    {% if section %}data-codemirror-section-value="{{ section }}"{% endif %}
+
+    class="rounded-2xl shadow-xl/20 transition-shadow duration-700 ease-in-out hover:shadow-primary
+      hover:shadow-primary hover:shadow-xl/40"
+    >
+  </div>
+{% else %}
+  <!-- codemirror: missing required 'key' argument -->
+{% endif %}
+
