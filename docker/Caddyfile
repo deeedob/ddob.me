@@ -1,6 +1,43 @@
+{
+  email dennis.ob@protonmail.com
+}
 
-:80 {
-    root * /srv
-    file_server
-    encode gzip zstd
+ddob.me, www.ddob.me {
+  root * /srv
+  file_server
+  encode gzip zstd
+
+  @assets {
+    path /static/* /js/* /css/* /images/* /fonts/* /assets/*
+  }
+  header @assets Cache-Control "public, max-age=31536000, immutable"
+
+  @html {
+    path /index.html /
+    file
+  }
+  header @html Cache-Control "public, max-age=0, must-revalidate"
+
+  # security headers
+  header {
+    strict-transport-security "max-age=63072000; includeSubDomains; preload"
+
+    X-Frame-Options "DENY"
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "no-referrer-when-downgrade"
+    Permissions-Policy "geolocation=(), microphone=()"
+    X-XSS-Protection "1; mode=block"
+  }
+
+  # Fallback for single-page apps (optional). Adjust if your site is not SPA:
+  try_files {path} {path}/ /index.html
+
+  log {
+    output file /var/log/caddy/access.log {
+      roll_size 10mb
+      roll_keep 5
+      roll_keep_for 720h
+    }
+    level ERROR
+  }
 }

@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "concurrently -k \"npm:dev:css\" \"npm:dev:js\" \"npm:dev:zola\"",
-    "dev:css": "tailwindcss -i ./sass/main.scss -o ./static/css/main.css --watch",
-    "dev:js": "node ./build.js --watch",
+    "dev:css": "tailwindcss --watch -i ./css/main.css -o ./static/css/main.css",
+    "dev:js": "NODE_ENV=development node ./build.js --watch",
     "dev:zola": "zola serve",
     "build": "npm run build:css && npm run build:js",
-    "build:css": "tailwindcss -i ./sass/main.scss -o ./static/css/main.css",
-    "build:js": "node ./build.js",
+    "build:css": "tailwindcss --minify -i ./css/main.css -o ./static/css/main.css",
+    "build:js": "NODE_ENV=production node ./build.js",
     "update-deps": "npm update --save"
   },
   "dependencies": {

@@ -142,9 +142,9 @@
   --cm-selection: var(--color-overlay);
   --cm-gutter-bg: var(--color-panel);
   --cm-gutter-fg: color-mix(in srgb, var(--color-content-muted) 70%, black 30%);
-  --cm-active-line: var(--color-overlay)11;
+  --cm-active-line: color-mix(in srgb, var(--color-overlay) 11%, transparent 89%);
   --cm-cursor: var(--color-accent);
-  --cm-matching-bracket: var(--color-accent)44;
+  --cm-matching-bracket: color-mix(in srgb, var(--color-accent) 44%, transparent 56%);
 }
 
 /* STYLES FOR THE MORPHING PLAY/PAUSE BUTTON */
@@ -240,15 +240,33 @@ nav a.nav-link:focus-visible::after {
   scrollbar-color: rgba(203, 166, 247, 0.45) transparent;
 }
 
-.prose {
-  /* Ensure code elements are properly styled */
-  code {
-    &::before,
-    &::after {
-      content: '' !important; /* Remove backticks */
-    }
-
-    // background-color: color-mix(in srgb, var(--color-primary) 15%, transparent 85%);
+.prose code::before, .prose code::after {
+  content: '' !important; /* Remove backticks */
+}
+.prose h1 code, .prose h2 code, .prose h3 code, .prose h4 code, .prose h5 code, .prose h6 code {
+  font-size: 0.9em;
+  font-weight: 600;
+}
+.prose pre {
+  background-color: var(--color-panel);
+  border: 1px solid var(--color-overlay);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+}
+.prose pre code {
+  background-color: transparent;
+  color: var(--color-content);
+  padding: 0;
+  border: none;
+  font-size: 0.875em;
+  font-weight: 400;
+}
+.prose a code {
+  color: inherit;
+  background-color: color-mix(in srgb, var(--color-primary) 10%, transparent 90%);
+}
+.prose code {
     color: var(--color-primary);
     padding: 0.125rem 0.325rem;
     border-radius: 0.25rem;
@@ -256,43 +274,12 @@ nav a.nav-link:focus-visible::after {
     font-weight: 500;
     font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
     border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent 80%);
-  }
-
-  /* Fix for code blocks within headings and other elements */
-  h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
-    font-size: 0.9em;
-    font-weight: 600;
-  }
-
-  /* Better pre/code block styling */
-  pre {
-    background-color: var(--color-panel);
-    border: 1px solid var(--color-overlay);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    overflow-x: auto;
-
-    code {
-      background-color: transparent;
-      color: var(--color-content);
-      padding: 0;
-      border: none;
-      font-size: 0.875em;
-      font-weight: 400;
-    }
-  }
-
-  /* Links containing code */
-  a code {
-    color: inherit;
-    background-color: color-mix(in srgb, var(--color-primary) 10%, transparent 90%);
-  }
 }
 
 .filter-btn {
   @apply px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 transform;
-  @apply text-content bg-panel border-primary/30 shadow-inner; /* base: inset, looks like pressed in */
-  @apply hover:scale-105 hover:shadow-lg hover:bg-primary/20;  /* lifted on hover */
+  @apply text-content bg-panel border-primary/30 shadow-inner;
+  @apply hover:scale-105 hover:shadow-lg hover:bg-primary/20;
   @apply cursor-pointer select-none;
 }
 

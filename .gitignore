@@ -1,5 +1,13 @@
-**bundle.js
-**node_modules
-**.DS_Store
-**cmake-build/
-**build*/
+/public/
+/node_modules/
+
+# Build artifacts (JS + CSS outputs)
+static/js/bundle.js
+static/js/*.map
+static/css/*.css
+static/css/*.map
+
+build*/
+cmake-build*/
+
+.DS_Store

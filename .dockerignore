@@ -1,12 +1,5 @@
-node_modules
-npm-debug.log
+public/
+node_modules/
 .DS_Store
 .git
 .gitignore
-/dist
-/public
-*.log
-.env
-.vscode
-.idea
-local_db

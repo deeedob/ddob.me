@@ -1,3 +1,4 @@
+name: ddob-website
 services:
   site:
     build:

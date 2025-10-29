@@ -7,8 +7,10 @@
 
     {% include "partials/head.html" %}
 
-    <link rel="stylesheet" href="{{ get_url(path='css/main.css') | safe }}" />
-    <script type="module" src="{{ get_url(path='js/bundle.js') }}"></script>
+    <link rel="preload" href="{{ get_url(path='css/main.css', cachebust=true) }}" as="style">
+    <link rel="stylesheet" href="{{ get_url(path='css/main.css', cachebust=true) }}" media="all">
+
+    <script type="module" src="{{ get_url(path='js/bundle.js', cachebust=true) }}" defer></script>
 </head>
 
 <body class="bg-background text-content antialiased transition-colors duration-300 pb-32">
