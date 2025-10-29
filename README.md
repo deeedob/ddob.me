@@ -1,14 +1,14 @@
 # DDob.me
 
 This repository contains the frontend code powering **[ddob.me](https://www.ddob.me)**.
-The site is built with **Zola**, **TailwindCSS**, and **ESBuild** — and deployed via Docker.
+The site is built with **Zola** and **TailwindCSS**. Deployed via **Docker**.
 
 ## Development
 
 Install dependencies:
 
 ```bash
-npm run dev
+npm install
 ```
 Start development environment:
 
