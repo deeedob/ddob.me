@@ -1,7 +1,7 @@
 FROM node:20-alpine AS frontend
 WORKDIR /src
-COPY package.json package-lock.json* ./
-RUN npm ci
+COPY package.json ./
+RUN npm install
 COPY . .
 RUN npm run build
 
