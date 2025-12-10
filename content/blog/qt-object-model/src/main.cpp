@@ -1,15 +1,15 @@
 // @section-start:task
-#include <QtCore/QDateTime>
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QTime>
 
 class Task : public QObject
 {
     Q_OBJECT
 
 public:
-    Task(QString name, QObject* parent = nullptr)
-        : QObject(parent), name(name) { }
+    Task(QString name_, QObject* parent = nullptr)
+        : QObject(parent), name(std::move(name_)) { }
     ~Task() override = default;
     Q_DISABLE_COPY_MOVE_X(Task, "QObjects are identities!")
 
@@ -19,24 +19,16 @@ signals:
     void finished();
 
 public slots:
-    void start() {
-        qInfo().noquote() << "started: Task { name:" << name << "}, time: "
-            << QDateTime::currentDateTimeUtc().toString("hh:mm:ss:zzz");
+    virtual void start() {
+        qInfo("%s: Started Task { name: %s }",
+            qPrintable(QTime::currentTime().toString("hh:mm:ss:zzz")),
+            qPrintable(name)
+        );
         emit finished();
     }
 };
 
 // @section-end:task
-
-void recursiveChildren(QObject *object, const std::function<void(QObject *)> &func)
-{
-    if (!object)
-        return;
-    for (auto *child : object->children()) {
-        func(child);
-        recursiveChildren(child, func);
-    }
-}
 
 // @section-start:processor
 #include <QtCore/QMetaMethod>
@@ -46,25 +38,30 @@ void recursiveChildren(QObject *object, const std::function<void(QObject *)> &fu
 void genericObjectProcessor(QObject &object,
                             Qt::ConnectionType connectionType = Qt::AutoConnection)
 {
-    const auto *meta = object.metaObject();
-    const QString className = meta->className();
-    qInfo() << "\nGeneric processor on object class: " << className;
+    const auto *metaObj = object.metaObject();
+    const QString className = metaObj->className();
+    qInfo() << "\nGeneric processor on class:" << className;
 
-    // Connect to anything with a 'finished' signal.
-    if (const auto index = meta->indexOfSignal("finished()"); index != -1) {
-        const auto signal = meta->method(index);
+    // Set any 'singleShot' property to true
+    if (object.setProperty("singleShot", true))
+        qInfo() << "Property singleShot set to true on class:" << className;
+
+    // Connect to anything with a 'finished()' signal.
+    if (const auto index = metaObj->indexOfSignal("finished()"); index != -1) {
+        const auto signal = metaObj->method(index);
         QMetaObject::connect(&object, signal, &object, [className](){
-            qInfo() << "  finished() emitted on class: " << className;
+            qInfo() << "Emitting finished() on class:" << className;
         }, connectionType);
     }
 
-    // Invoke anything with a 'start' slot.
-    if (const auto index = meta->indexOfSlot("start()"); index != -1) {
-        const auto slot = meta->method(index);
+    // Invoke anything with a 'start()' slot.
+    if (const auto index = metaObj->indexOfSlot("start()"); index != -1) {
+        qInfo() << "Calling start() on class:" << className;
+        const auto slot = metaObj->method(index);
         slot.invoke(&object, connectionType);
     }
 
-    // Check for the QThread class explicitly.
+    // Quit and wait the QThread class explicitly.
     if (auto *thread = qobject_cast<QThread*>(&object)) {
         thread->quit();
         thread->wait();
@@ -73,73 +70,92 @@ void genericObjectProcessor(QObject &object,
 // @section-end:processor
 
 // @section-start:eventTask
-#include <QtCore/QCoreApplication>
-#include <QtCore/QEvent>
 
+#include <QtCore/QEvent>
 #include <chrono>
 
-struct OperationEvent : public QEvent {
-    static constexpr auto Type = QEvent::Type(QEvent::User);
-
-    explicit OperationEvent(QString name)
-      : QEvent(Type), targetName(std::move(name)) {}
-
-    const QString targetName;
-};
-
-class DelayedTask : public Task
+class DeadlineTask : public Task
 {
     Q_OBJECT
 
 public:
-    DelayedTask(std::chrono::nanoseconds delay, QString name, QObject *parent = nullptr)
-        : Task(std::move(name), parent), delay(delay)
-    {
+    DeadlineTask(std::chrono::milliseconds deadline_, QString name,
+                QObject *parent = nullptr)
+        : Task(std::move(name), parent), deadline(deadline_) {
     }
-    ~DelayedTask() override = default;
-    Q_DISABLE_COPY_MOVE(DelayedTask)
+    ~DeadlineTask() override = default;
+    Q_DISABLE_COPY_MOVE(DeadlineTask)
 
-    const std::chrono::nanoseconds delay;
+    const std::chrono::milliseconds deadline;
 
-    bool event(QEvent *ev) override {
-        switch (ev->type()) {
-            case QEvent::Timer: {
-                // we could also override 'QObject::timerEvent'
-                auto timerEvId = static_cast<QTimerEvent*>(ev)->timerId();
-                if (mActiveTimerIds.remove(timerEvId)) {
-                    QObject::killTimer(timerEvId);    // timeout
-                    DelayedTask::start();
-                }
-                return true;
-            };
-            case OperationEvent::Type: {
-                auto *customEv = static_cast<OperationEvent*>(ev);
-                if (customEv->targetName == name)
-                    connect(this, &Task::finished, qApp, &QCoreApplication::quit);
-                mActiveTimerIds.insert(QObject::startTimer(delay));
-                recursiveChildren(this, [&](QObject *child){
-                    if (auto *childTask = qobject_cast<DelayedTask*>(child))
-                        childTask->event(ev);
-                });
-                return true;
-            }
-            default:
-                return false;
-        };
+    void timerEvent(QTimerEvent *event) override
+    {
+        auto id = event->id();
+        if (mActiveTimerIds.remove(id)) {
+            QObject::killTimer(id);
+            Task::start();
+        }
+    }
+
+public slots:
+    void start() override {
+        auto id = Qt::TimerId(QObject::startTimer(deadline));
+        if (id == Qt::TimerId::Invalid)
+            return;
+        mActiveTimerIds.insert(id);
     }
 
 private:
-    QSet<int> mActiveTimerIds;
-    static constexpr int Value = 100;
+    QSet<Qt::TimerId> mActiveTimerIds;
 };
 // @section-end:eventTask
 
+#include <QtCore/QCoreApplication>
+
+struct FilterEvent : public QEvent {
+    inline static auto Type = QEvent::Type(QEvent::registerEventType());
+
+    explicit FilterEvent(QString filter_)
+      : QEvent(Type), filter(std::move(filter_)) { }
+
+    const QString filter;
+};
+
+class TaskManager : public QObject
+{
+    Q_OBJECT
+
+public:
+    using QObject::QObject;
+    ~TaskManager() override = default;
+    Q_DISABLE_COPY_MOVE(TaskManager)
+
+public slots:
+    bool event(QEvent *ev) override {
+        // We could also override 'QObject::customEvent'
+        if (ev->type() != FilterEvent::Type)
+            return QObject::event(ev);
+
+        const auto *event = static_cast<FilterEvent*>(ev);
+        const auto &filter = event->filter;
+        const auto tasks = findChildren<Task*>();
+
+        qInfo() << "TaskManager filters:" << filter
+            << "on" << tasks.size() << "tasks.";
+
+        for (auto *child : tasks) {
+            if (!child->name.contains(filter))
+                continue;
+            child->start();
+        }
+
+        return true;
+    }
+};
+
 #include <QtCore/QChronoTimer>
-#include <QtCore/QTimer>
-#include <QtCore/QElapsedTimer>
 #include <QtCore/QPointer>
-
-
+#include <QtCore/QTimer>
 
 #include <iostream>
 
@@ -157,7 +173,7 @@ int main(int argc, char *argv[])
         QThread thread;
         QObject::connect(
             &thread, &QThread::started,
-            &thread, [](){ qInfo("thread started"); },
+            &thread, [](){ qInfo("Started Thread"); },
             Qt::DirectConnection
         );
         genericObjectProcessor(thread, Qt::DirectConnection);
@@ -168,7 +184,6 @@ int main(int argc, char *argv[])
     {
         auto setupTimer = [](auto *timer) {
             using TimerType = std::remove_pointer_t<decltype(timer)>;
-            timer->setSingleShot(true);
             QObject::connect(timer, &TimerType::timeout, timer, [timer]() {
                 qInfo() << timer->metaObject()->className() << "timeout";
             });
@@ -206,62 +221,59 @@ int main(int argc, char *argv[])
 
         QObject::connect(&todoList, &QObject::destroyed, &todoList, [](QObject *self){
             qInfo() << self << "destroyed. Starting any remaining children:";
-            recursiveChildren(self, [](QObject *child) {
-                if (auto *task = qobject_cast<Task*>(child))
-                    task->start();
-            });
+            for (auto *task : self->findChildren<Task*>())
+              task->start();
         });
     } // todoList goes out of scope
     std::cout << "After scope:  subtask1=" << subtask1 << ", subtask2=" << subtask2 << "\n";
 // @section-end:qt-lifetime
 
-// @section-start:qt-events
-    qInfo("\nDelayedTask Start");
+    qInfo("\nDeadlineTask Start");
     {
         using namespace std::chrono_literals;
         QCoreApplication app(argc, argv);
 
-        DelayedTask root(1s, "root");
-        new DelayedTask(2s, "root-1", &root);
-        auto * subtask = new DelayedTask(1s, "subtask", &root);
-        new DelayedTask(1s, "subtask-1", subtask);
-        new DelayedTask(5s, "subtask-2", subtask);
-        new DelayedTask(3s, "longest-task", subtask);
+        DeadlineTask task(1s, "deadline-1s");
+        QObject::connect(&task, &DeadlineTask::finished, &task, [count = 0u]() mutable {
+          if (++count == 3)
+              qApp->exit();
+        });
+        task.start(); task.start(); task.start();
 
-        // {
-        //     OperationEvent event(OperationEvent::CloseWhenFinished, "root-1");
-        //     QCoreApplication::sendEvent(&root, &event);
-        // } // event has been sent already!
-
-        QCoreApplication::postEvent(&root,
-            new OperationEvent("longest-task"));
-        QCoreApplication::exec();
+        app.exec();
     }
-    qInfo("DelayedTask End");
-// @section-end:qt-events
+    qInfo("DeadlineTask End");
 
-// @section-start:qt-event-timers
-    // qInfo("\nQt Event Timers Start");
+
+    qInfo("\nCustomEvent Start");
     {
-        // QCoreApplication app(argc, argv);
-        // QObject::connect(&app, &QCoreApplication::aboutToQuit, &app, []{
-        //     qInfo() << "Quit Time" << QTime::currentTime();
-        // });
-        //
-        // EventTask parent(nullptr);
-        // new EventTask(&parent, QEvent::Timer);
-        //
-        // qInfo() << "Start Time" << QTime::currentTime();
-        //
-        // QTimerEvent timer1(parent.startTimer(2s));
-        // qInfo() << "timer1 started" << timer1.;
-        // QCoreApplication::exec();
-        //
-        // // qInfo() << QTimerEvent(parent.startTimer(2s)).id();
-        // QCoreApplication::exec();
+        using namespace std::chrono_literals;
+        QCoreApplication app(argc, argv);
+
+        TaskManager taskManager;
+        taskManager.setObjectName("root-manager");
+
+        auto *alpha = new Task("alpha-task", &taskManager);
+        new Task("alpha-1-task", alpha);
+        new DeadlineTask(1s, "alpha-2-deadline", alpha);
+
+        auto *beta = new DeadlineTask(2s, "beta-deadline", &taskManager);
+        new DeadlineTask(500ms, "beta-1-deadline", beta);
+        new Task("beta-2-task", beta);
+
+        // Directly sends the event. Takes no ownership.
+        FilterEvent taskFilter("task");
+        QCoreApplication::sendEvent(&taskManager, &taskFilter);
+
+        // Posts the event to the event queue. Takes ownership.
+        QCoreApplication::postEvent(&taskManager, new FilterEvent("-1"));
+        QCoreApplication::postEvent(&taskManager, new FilterEvent("deadline"));
+
+        QObject::connect(beta, &DeadlineTask::finished, &app, QCoreApplication::quit);
+        qInfo("Starting event-loop");
+        app.exec();
     }
-    // qInfo("Qt Event Timers End");
-// @section-end:qt-event-timers
+    qInfo("CustomEvent End");
 
     return 0;
 }
