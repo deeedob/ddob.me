@@ -1,5 +1,5 @@
 +++
-title = "Don't tell the algorithm"
+title = "Hello World"
 date = 2025-10-28
 [extra]
 image_position="35%"
@@ -13,7 +13,7 @@ image_position="35%"
   >
 </div>
 
-Hello! My name is Dennis, also known as **DDob**, and this is my personal website. I have been wanting a place where all of my work can live together, from my music and blog posts to the many (technical) projects I am working on. Until now, everything has been scattered across the internet, which never felt right. This is where I start bringing it all home.
+Hey! My name is Dennis, also known as **DDob**, and this is my personal website. I have been wanting a place where all of my work can live together, from my music and blog posts to the many (technical) projects I am working on. Until now, everything has been scattered across the internet, which never felt right. This is where I start bringing it all home.
 
 ## Why I am building my own space
 
@@ -27,4 +27,4 @@ This website is my own corner of the internet. No ads. No dark patterns. Just my
 
 This is just the beginning, and there is still a lot missing. Over the next few weeks, I will work on bringing all of my music here as well.
 
-If you would like to learn more about me, check out the [About](@/about.md) page.
+If you would like to learn more about me, check out the [About](@/about.md) page for now.
