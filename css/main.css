@@ -268,12 +268,15 @@ nav a.nav-link:focus-visible::after {
 }
 .prose code {
     color: var(--color-primary);
-    padding: 0.125rem 0.325rem;
+    padding: 0 0.325rem;
     border-radius: 0.25rem;
     font-size: 0.875em;
     font-weight: 500;
     font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
     border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent 80%);
+    display: inline-block;
+    white-space: nowrap;
+    vertical-align: baseline;
 }
 
 .filter-btn {
@@ -411,16 +414,15 @@ article[data-tags].fade-out {
 .timeline-item:focus-within .timeline-card {
   transform: translateX(-6px);
   box-shadow:
-    0 24px 60px rgba(0,0,0,0.6), /* moody outer shadow */
-    inset 0 1px 18px color-mix(in srgb, var(--color-primary) 6%, transparent 94%); /* subtle inset */
-  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-panel) 90%); /* desaturated primary tint */
+    0 24px 60px rgba(0,0,0,0.6),
+    inset 0 1px 18px color-mix(in srgb, var(--color-primary) 6%, transparent 94%);
+  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-panel) 90%);
   border: 1px solid color-mix(in srgb, var(--color-primary) 8%, var(--color-overlay) 92%);
 }
 
-/* Dot hover: darker/denser primary, moody glow */
 .timeline-item:hover .timeline-dot,
 .timeline-item:focus-within .timeline-dot {
-  background: color-mix(in srgb, var(--color-primary) 82%, black 18%); /* dense primary */
+  background: color-mix(in srgb, var(--color-primary) 82%, black 18%);
   border-color: color-mix(in srgb, var(--color-primary) 86%, white 14%);
   transform: scale(1.06);
   box-shadow: 0 10px 30px color-mix(in srgb, var(--color-primary) 20%, black 80%);

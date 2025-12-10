@@ -2,16 +2,26 @@
 
 {% block content %}
 
-<article class="prose dark:prose-invert mx-auto max-w-3xl py-12">
+<article class="prose dark:prose-invert mx-auto max-w-3xl">
   <h1 class="text-4xl font-bold mb-3">{{ page.title }}</h1>
 
   {% if page.date %}
-    <p class="text-sm text-gray-500 dark:text-gray-400">
-      {{ page.date | date(format="%B %e, %Y") }}
-    </p>
+    <div class="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mb-6">
+      <time datetime="{{ page.date }}">
+        {{ page.date | date(format="%B %e, %Y") }}
+      </time>
+      <span class="w-1 h-1 rounded-full bg-gray-400 dark:bg-gray-500"></span>
+      <span class="inline-flex items-center gap-1.5">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>{{ page.reading_time }} min read</span>
+      </span>
+    </div>
   {% endif %}
 
   {{ page.content | safe }}
 </article>
 
 {% endblock content %}
+

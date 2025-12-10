@@ -116,7 +116,7 @@ const customHighlightStyle = HighlightStyle.define([
   },
   { tag: t.invalid,
     color: "var(--cm-macro)",
-    backgroundColor: "var(--cm-macro)11"
+    backgroundColor: "var(--cm-macro)"
   },
   { tag: t.deleted,
     color: "var(--cm-macro-light)"
@@ -161,7 +161,7 @@ const baseTheme = EditorView.theme({
   },
 
   ".cm-cursor, .cm-dropCursor": {
-    borderLeftColor: "var(--color-accent)",
+    borderLeftColor: "var(--color-primary)",
   },
 
   "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection": {
@@ -188,11 +188,11 @@ const baseTheme = EditorView.theme({
   },
 
   ".cm-selectionMatch": {
-    backgroundColor: "var(--color-overlay)22",
+    backgroundColor: "var(--color-overlay)",
   },
 
   "&.cm-focused .cm-matchingBracket": {
-    backgroundColor: "var(--color-overlay)22",
+    backgroundColor: "var(--color-overlay)",
     outline: "1px solid var(--color-accent)",
   },
 
@@ -219,12 +219,12 @@ const baseTheme = EditorView.theme({
   },
 
   ".cm-searchMatch": {
-    backgroundColor: "var(--color-state-info)33",
+    backgroundColor: "var(--color-state-info)",
     outline: "1px solid var(--color-state-info)",
   },
 
   ".cm-searchMatch.cm-searchMatch-selected": {
-    backgroundColor: "var(--color-state-info)66",
+    backgroundColor: "var(--color-state-info)",
   },
 
   // Vim-specific styles
@@ -233,7 +233,7 @@ const baseTheme = EditorView.theme({
   },
 
   "&.cm-focused .cm-fat-cursor": {
-    backgroundColor: "var(--color-accent)",
+    backgroundColor: "var(--color-state-info)",
   },
 
   "&:not(.cm-focused) .cm-fat-cursor": {

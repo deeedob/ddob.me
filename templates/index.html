@@ -35,14 +35,14 @@
 {% set tags_tax = get_taxonomy(kind="tags") %}
 {% set tags = tags_tax.items %}
 
-<section class="max-w-6xl mx-auto px-4" data-controller="tagfilter">
-  <div class="text-center mb-10">
-    <h1 class="text-4xl font-bold text-content mb-4">Latest Posts</h1>
+<section class="max-w-6xl mx-auto" data-controller="tagfilter">
+  <div class="text-center mb-6">
+    <h1 class="text-4xl font-bold text-content mb-4">News</h1>
     <p class="text-content-muted">Filter by tag to explore topics of interest</p>
   </div>
 
   {# --- Tag filter buttons --- #}
-  <div class="flex flex-wrap justify-center gap-3 mb-12">
+  <div class="flex flex-wrap justify-center gap-3 mb-6">
     {% for tag in tags %}
       <button
         type="button"

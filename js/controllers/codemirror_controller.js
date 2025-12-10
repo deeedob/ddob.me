@@ -69,17 +69,19 @@ export default class extends Controller {
   async createEditor(code, language) {
     try {
       const [
-        { EditorView, basicSetup },
+        { EditorView },
         { EditorState },
         { cpp },
         { vim },
         { codemirrorTheme },
+        { basicSetup },
       ] = await Promise.all([
         import("codemirror"),
         import("@codemirror/state"),
         import("@codemirror/lang-cpp"),
         import("@replit/codemirror-vim"),
         import("./codemirror_theme"),
+        import("./codemirror_basic_setup"),
       ]);
 
       const extensions = [

@@ -24,26 +24,29 @@ export default class extends Controller {
   }
 
   filterPosts() {
-    const posts = this.postsTarget.querySelectorAll("article[data-tags]")
+    const posts = Array.from(this.postsTarget.querySelectorAll("[data-tags]"))
 
     posts.forEach(post => {
       const tags = post.dataset.tags
         ? post.dataset.tags.split(",").map(t => t.trim())
         : []
 
-      const show =
-        this.activeTags.length === 0 || tags.some(t => this.activeTags.includes(t))
+      const show = this.activeTags.length === 0
+          || tags.some(t => this.activeTags.includes(t))
 
       if (show) {
-        post.classList.add("fade-in")
+        post.classList.remove("hidden")
         post.classList.remove("fade-out")
+        post.classList.add("fade-in")
         post.style.pointerEvents = "auto"
+        post.setAttribute("aria-hidden", "false")
       } else {
-        post.classList.add("fade-out")
+        post.classList.add("hidden")
         post.classList.remove("fade-in")
+        post.classList.add("fade-out")
         post.style.pointerEvents = "none"
+        post.setAttribute("aria-hidden", "true")
       }
     })
   }
 }
-

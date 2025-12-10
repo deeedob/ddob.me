@@ -21,10 +21,10 @@ async function main() {
   if (isWatch) {
     const ctx = await esbuild.context(options);
     await ctx.watch();
-    console.log('🚀 ESBuild watching for changes...');
+    console.log('ESBuild watching for changes...');
   } else {
     await esbuild.build(options);
-    console.log('✅ JS build complete!');
+    console.log('JS build complete!');
   }
 }
 
